@@ -128,6 +128,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     }
 
     @Override
+    public void refreshGrades() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.rootView, GradesFragment.newInstance(this.firebaseUser))
+                .commit();
+    }
+
+    @Override
     public void goCreateNewAccount() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.rootView, new SignUpFragment())

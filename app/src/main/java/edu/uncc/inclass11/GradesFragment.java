@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.common.ChangeEventType;
@@ -115,6 +117,7 @@ public class GradesFragment extends Fragment {
                 holder.setCourse_letter_grade(model.getCourse_grade());
                 holder.setCourse_name(model.getCourse_name());
                 holder.setCourse_number(model.getCourse_number());
+                holder.setCourse_id(model.getGrade_id());
             }
 
             @Override
@@ -200,9 +203,23 @@ public class GradesFragment extends Fragment {
             TextView textView = view.findViewById(R.id.textViewCourseLetterGrade);
             textView.setText(course_letter_grade);
         }
+
+        public void setCourse_id(String grade_id) {
+            ImageView imageViewDelete = view.findViewById(R.id.imageViewDelete);
+            imageViewDelete.setOnClickListener(view -> firebaseFirestore
+                    .collection("students")
+                    .document(firebaseUser.getUid())
+                    .collection("grades")
+                    .document(grade_id)
+                    .delete()
+                    .addOnSuccessListener(unused -> Log.d("demo", "Grade successfully deleted"))
+                    .addOnFailureListener(e -> Log.w("demo", "Error deleting grade", e)));
+        }
     }
 
     interface GradesListener {
         void goAddCourse();
+
+        void refreshGrades();
     }
 }
